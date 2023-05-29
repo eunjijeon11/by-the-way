@@ -7,20 +7,26 @@ import {
   Text,
   CardHeader,
   Heading,
+  CardBody,
+  Center,
 } from "@chakra-ui/react";
 
 function verboseBox(leg: any) {
   var icon: "🚍" | "🚊" | "🚶🏻" = "🚶🏻";
   var color: string = "gray.200";
+  var verbose: string = "";
   if (leg.mode === "WALK") {
     icon = "🚶🏻";
     color = "gray.200";
+    verbose = "도보로 " + leg.distance + "m 이동";
   } else if (leg.mode === "BUS") {
     icon = "🚍";
-    color = "green.300";
+    color = "#" + leg.routeColor;
+    verbose = leg.route + "로 " + leg.type + "개 정류장 이동";
   } else if (leg.mode === "SUBWAY") {
     icon = "🚊";
     color = "orange.300";
+    verbose = "지하철";
   }
 
   return (
@@ -30,19 +36,24 @@ function verboseBox(leg: any) {
           <Circle size="40px" bg={color}>
             <Text fontSize="xl">{icon}</Text>
           </Circle>
-          <Box
+          <Center
             width="10px"
             flex="1"
             bg={color}
             alignSelf="center"
             marginTop="-2"
             marginBottom="-4"
-          />
+          >
+            <Center m="-5" bg={color} p="1" borderRadius="lg">
+              {(leg.sectionTime / 60).toFixed() + "분"}
+            </Center>
+          </Center>
         </Flex>
         <Card flex="1" marginLeft="4" shadow="lg">
           <CardHeader>
             <Heading size="sm">{leg.start.name + "에서"}</Heading>
           </CardHeader>
+          <CardBody>{verbose}</CardBody>
         </Card>
       </Flex>
     </>

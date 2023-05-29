@@ -27,6 +27,37 @@ function mainInfo() {
 }
 
 export default function Verbose() {
+  var data1: any;
+
+  const fetch = require("node-fetch");
+
+  const url = "https://apis.openapi.sk.com/transit/routes";
+  const options = {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+      appKey: "UN27oUnc8Ma0gwH3grXRaat6I163mp0W1Osa5VUy",
+    },
+    body: JSON.stringify({
+      startX: "126.926493082645",
+      startY: "37.6134436427887",
+      endX: "127.126936754911",
+      endY: "37.5004198786564",
+      lang: 0,
+      format: "json",
+      count: 10,
+      searchDttm: "202301011200",
+    }),
+  };
+
+  fetch(url, options)
+    .then((res: any) => res.json())
+    .then((json: any) => (data1 = json))
+    .catch((err: any) => console.error("error:" + err));
+
+  console.log(data);
+
   return (
     <>
       <Script
