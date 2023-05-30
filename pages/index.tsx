@@ -157,12 +157,11 @@ export default function Home() {
         current = current.next;
       }
 
+      localStorage.setItem("length", length.toString());
+      localStorage.setItem("Data", JSON.stringify(waypointsData));
+
       router.push({
         pathname: "/suggest",
-        query: {
-          length: length.toString(),
-          waypointsData: JSON.stringify(waypointsData),
-        },
       });
       console.log("length", length);
       console.log("Data:", waypointsData);

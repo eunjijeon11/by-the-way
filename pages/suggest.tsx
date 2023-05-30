@@ -29,6 +29,9 @@ export default function Suggestion() {
     ],
   };
 
+  query.length = parseFloat(localStorage.getItem("length"));
+  query.waypointsData = JSON.parse(localStorage.getItem("Data"));
+
   const options = {
     method: "POST",
     headers: {
@@ -314,7 +317,7 @@ export default function Suggestion() {
   const method5 = new Array(10); //fare1
 
   //time sort
-  itinerary.sort(function (a, b) {
+  itinerary.sort(function (a: any, b: any) {
     return a.totalTime - b.totalTime;
   });
   method1[0] = itinerary[0];
@@ -333,7 +336,7 @@ export default function Suggestion() {
   method2[9] = itinerary[1].totalTime;
   method3[9] = itinerary[2].totalTime;
   //transfer sort
-  itinerary.sort(function (a, b) {
+  itinerary.sort(function (a: any, b: any) {
     if (a.transferCount == b.transferCount) return a.totalTime - b.totalTime;
     return a.transferCount - b.transferCount;
   });
@@ -343,7 +346,7 @@ export default function Suggestion() {
   method4[8] = itinerary[0].fare.regular.totalFare;
   method4[9] = itinerary[0].totalTime;
   //fare sort
-  itinerary.sort(function (a, b) {
+  itinerary.sort(function (a: any, b: any) {
     if (a.fare.regular.totalFare == b.fare.regular.totalFare)
       return a.totalTime - b.totalTime;
     return a.fare.regular.totalFare - b.fare.regular.totalFare;
@@ -360,7 +363,7 @@ export default function Suggestion() {
 
     const itinerary2 = dataList[i].metaData.plan.itineraries;
 
-    itinerary2.sort(function (a, b) {
+    itinerary2.sort(function (a: any, b: any) {
       return a.totalTime - b.totalTime;
     });
 
@@ -431,7 +434,7 @@ export default function Suggestion() {
       }
     }
 
-    itinerary2.sort(function (a, b) {
+    itinerary2.sort(function (a: any, b: any) {
       if (a.transferCount == b.transferCount) return a.totalTime - b.totalTime;
       return a.transferCount - b.transferCount;
     });
@@ -441,7 +444,7 @@ export default function Suggestion() {
     method4[8] += itinerary2[0].fare.regular.totalFare;
     method4[9] += itinerary2[0].totalTime;
 
-    itinerary.sort(function (a, b) {
+    itinerary.sort(function (a: any, b: any) {
       if (a.fare.regular.totalFare == b.fare.regular.totalFare)
         return a.totalTime - b.totalTime;
       return a.fare.regular.totalFare - b.fare.regular.totalFare;
@@ -463,21 +466,21 @@ export default function Suggestion() {
   var hours = today.getHours();
   var minutes = today.getMinutes();
 
-  var method1_hours = parseInt(method1[9] / 3600);
+  var method1_hours = Math.round(method1[9] / 3600);
   method1[9] -= method1_hours * 3600;
-  var method1_minutes = parseInt(method1[9] / 60);
-  var method2_hours = parseInt(method2[9] / 3600);
+  var method1_minutes = Math.round(method1[9] / 60);
+  var method2_hours = Math.round(method2[9] / 3600);
   method2[9] -= method2_hours * 3600;
-  var method2_minutes = parseInt(method2[9] / 60);
-  var method3_hours = parseInt(method3[9] / 3600);
+  var method2_minutes = Math.round(method2[9] / 60);
+  var method3_hours = Math.round(method3[9] / 3600);
   method3[9] -= method3_hours * 3600;
-  var method3_minutes = parseInt(method3[9] / 60);
-  var method4_hours = parseInt(method4[9] / 3600);
+  var method3_minutes = Math.round(method3[9] / 60);
+  var method4_hours = Math.round(method4[9] / 3600);
   method4[9] -= method4_hours * 3600;
-  var method4_minutes = parseInt(method4[9] / 60);
-  var method5_hours = parseInt(method5[9] / 3600);
+  var method4_minutes = Math.round(method4[9] / 60);
+  var method5_hours = Math.round(method5[9] / 3600);
   method5[9] -= method5_hours * 3600;
-  var method5_minutes = parseInt(method5[9] / 60);
+  var method5_minutes = Math.round(method5[9] / 60);
 
   return (
     <>
@@ -498,16 +501,21 @@ export default function Suggestion() {
               {hours}:{String(minutes).padStart(2, "0")} ~{" "}
               {hours + method1_hours}:{minutes + method1_minutes}
             </Text>
-            <Text>도보: {parseInt(method1[6] / 60)}분 </Text>
+            <Text>도보: {Math.round(method1[6] / 60)}분 </Text>
             <Text>환승: {method1[7]}회</Text>
             <Text>카드: {method1[8]}원</Text>
           </CardBody>
           <CardFooter>
-            <ButtonGroup onClick={() => router.push({ pathname: "/verbose" })}>
-              <Button variant="ghost" colorScheme="black">
-                경로 상세보기
-              </Button>
-            </ButtonGroup>
+            <Button
+              variant="ghost"
+              colorScheme="black"
+              onClick={() => {
+                localStorage.setItem("selectedRoute", method1.toString());
+                router.push({ pathname: "/verbose" });
+              }}
+            >
+              경로 상세보기
+            </Button>
           </CardFooter>
         </Card>
         <Card>
@@ -523,13 +531,16 @@ export default function Suggestion() {
               {hours}:{String(minutes).padStart(2, "0")} ~{" "}
               {hours + method2_hours}:{minutes + method2_minutes}
             </Text>
-            <Text>도보: {parseInt(method2[6] / 60)}분 </Text>
+            <Text>도보: {Math.round(method2[6] / 60)}분 </Text>
             <Text>환승: {method2[7]}회</Text>
             <Text>카드: {method2[8]}원</Text>
           </CardBody>
           <CardFooter>
             <ButtonGroup
-              onClick={() => router.push({ pathname: "/verbose", query })}
+              onClick={() => {
+                localStorage.setItem("selectedRoute", method2.toString());
+                router.push({ pathname: "/verbose" });
+              }}
             >
               <Button variant="ghost" colorScheme="black">
                 경로 상세보기
@@ -550,13 +561,16 @@ export default function Suggestion() {
               {hours}:{String(minutes).padStart(2, "0")} ~{" "}
               {hours + method3_hours}:{minutes + method3_minutes}
             </Text>
-            <Text>도보: {parseInt(method3[6] / 60)}분 </Text>
+            <Text>도보: {Math.round(method3[6] / 60)}분 </Text>
             <Text>환승: {method3[7]}회</Text>
             <Text>카드: {method3[8]}원</Text>
           </CardBody>
           <CardFooter>
             <ButtonGroup
-              onClick={() => router.push({ pathname: "/verbose", query })}
+              onClick={() => {
+                localStorage.setItem("selectedRoute", method3.toString());
+                router.push({ pathname: "/verbose" });
+              }}
             >
               <Button variant="ghost" colorScheme="black">
                 경로 상세보기
@@ -577,13 +591,16 @@ export default function Suggestion() {
               {hours}:{String(minutes).padStart(2, "0")} ~{" "}
               {hours + method4_hours}:{minutes + method4_minutes}
             </Text>
-            <Text>도보: {parseInt(method4[6] / 60)}분 </Text>
+            <Text>도보: {Math.round(method4[6] / 60)}분 </Text>
             <Text>환승: {method4[7]}회</Text>
             <Text>카드: {method4[8]}원</Text>
           </CardBody>
           <CardFooter>
             <ButtonGroup
-              onClick={() => router.push({ pathname: "/verbose", query })}
+              onClick={() => {
+                localStorage.setItem("selectedRoute", method4.toString());
+                router.push({ pathname: "/verbose" });
+              }}
             >
               <Button variant="ghost" colorScheme="black">
                 경로 상세보기
@@ -604,13 +621,16 @@ export default function Suggestion() {
               {hours}:{String(minutes).padStart(2, "0")} ~{" "}
               {hours + method5_hours}:{minutes + method5_minutes}
             </Text>
-            <Text>도보: {parseInt(method5[6] / 60)}분 </Text>
+            <Text>도보: {Math.round(method5[6] / 60)}분 </Text>
             <Text>환승: {method5[7]}회</Text>
             <Text>카드: {method5[8]}원</Text>
           </CardBody>
           <CardFooter>
             <ButtonGroup
-              onClick={() => router.push({ pathname: "/verbose", query })}
+              onClick={() => {
+                localStorage.setItem("selectedRoute", method5.toString());
+                router.push({ pathname: "/verbose" });
+              }}
             >
               <Button variant="ghost" colorScheme="black">
                 경로 상세보기
