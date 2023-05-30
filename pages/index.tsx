@@ -73,35 +73,58 @@ export default function Home() {
   };
 
   const handleSearch = async () => {
-    const startPoint = document.getElementById("startPoint") as HTMLInputElement;
+    const startPoint = document.getElementById(
+      "startPoint"
+    ) as HTMLInputElement;
     const endPoint = document.getElementById("endPoint") as HTMLInputElement;
-    const waypoints = document.querySelectorAll(".waypoint") as NodeListOf<HTMLInputElement>;
-  
+    const waypoints = document.querySelectorAll(
+      ".waypoint"
+    ) as NodeListOf<HTMLInputElement>;
+
     const start = startPoint.value;
     const waypointsArray: Waypoint[] = Array.from(waypoints).map((waypoint) => {
       return { name: waypoint.value, lat: 0, lon: 0 };
     });
     const end = endPoint.value;
-  
+
     try {
       const startCoords = await searchAddress(start);
       const waypointCoords = await Promise.all(
         waypointsArray.map(async (waypoint) => {
           const coords = await searchAddress(waypoint.name);
           if (coords) {
-            return { ...waypoint, name: coords.name, lat: coords.lat, lon: coords.lon };
+            return {
+              ...waypoint,
+              name: coords.name,
+              lat: coords.lat,
+              lon: coords.lon,
+            };
           }
           return waypoint;
         })
       );
       const endCoords = await searchAddress(end);
-  
-      const startName = startCoords ? startCoords.name : '';
-      const endName = endCoords ? endCoords.name : '';
-  
-      const startNode: WaypointNode = { waypoint: { name: startName, lat: startCoords?.lat || 0, lon: startCoords?.lon || 0 }, next: null };
-      const endNode: WaypointNode = { waypoint: { name: endName, lat: endCoords?.lat || 0, lon: endCoords?.lon || 0 }, next: null };
-  
+
+      const startName = startCoords ? startCoords.name : "";
+      const endName = endCoords ? endCoords.name : "";
+
+      const startNode: WaypointNode = {
+        waypoint: {
+          name: startName,
+          lat: startCoords?.lat || 0,
+          lon: startCoords?.lon || 0,
+        },
+        next: null,
+      };
+      const endNode: WaypointNode = {
+        waypoint: {
+          name: endName,
+          lat: endCoords?.lat || 0,
+          lon: endCoords?.lon || 0,
+        },
+        next: null,
+      };
+
       if (!head) {
         setHead(startNode);
         setTail(endNode);
@@ -111,7 +134,7 @@ export default function Home() {
         setHead(startNode);
         setTail(endNode);
       }
-  
+
       if (waypointCoords.length > 0) {
         let prevNode: WaypointNode | null = startNode;
         for (let i = 0; i < waypointCoords.length; i++) {
@@ -124,16 +147,16 @@ export default function Home() {
         }
         prevNode.next = endNode;
       }
-  
+
       const length = getLength();
       const waypointsData = [];
-  
+
       let current: WaypointNode | null = startNode;
       while (current) {
         waypointsData.push(current.waypoint);
         current = current.next;
       }
-  
+
       router.push({
         pathname: "/suggest",
         query: {
@@ -141,31 +164,35 @@ export default function Home() {
           waypointsData: JSON.stringify(waypointsData),
         },
       });
-      console.log("length", length)
+      console.log("length", length);
       console.log("Data:", waypointsData);
     } catch (error) {
       console.error("Error getting coordinates:", error);
     }
   };
-  
-  
-  const searchAddress = async (keyword: string): Promise<{ name: string; lat: number; lon: number } | null> => {
+
+  const searchAddress = async (
+    keyword: string
+  ): Promise<{ name: string; lat: number; lon: number } | null> => {
     try {
       const apiKey = "UN27oUnc8Ma0gwH3grXRaat6I163mp0W1Osa5VUy";
-      const response = await axios.get("https://apis.openapi.sk.com/tmap/pois", {
-        params: {
-          version: 1,
-          format: "json",
-          appKey: apiKey,
-          searchKeyword: keyword,
-          resCoordType: "EPSG3857",
-          reqCoordType: "WGS84GEO",
-          count: 1,
-        },
-        headers: {
-          "Content-Type": "application/json;charset=UTF-8",
-        },
-      });
+      const response = await axios.get(
+        "https://apis.openapi.sk.com/tmap/pois",
+        {
+          params: {
+            version: 1,
+            format: "json",
+            appKey: apiKey,
+            searchKeyword: keyword,
+            resCoordType: "WGS84GEO",
+            reqCoordType: "WGS84GEO",
+            count: 1,
+          },
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8",
+          },
+        }
+      );
 
       const pois = response.data.searchPoiInfo.pois.poi;
       if (pois.length > 0) {
@@ -183,11 +210,13 @@ export default function Home() {
 
       return null;
     } catch (error) {
-      console.error("주소를 검색하고 좌표를 얻어오는 중 오류가 발생했습니다.", error);
+      console.error(
+        "주소를 검색하고 좌표를 얻어오는 중 오류가 발생했습니다.",
+        error
+      );
       throw error;
     }
   };
-
 
   const getLength = (): number => {
     if (!head) {
@@ -219,19 +248,57 @@ export default function Home() {
 
   return (
     <>
-      <ButtonGroup variant="outline" spacing="6" style={{ marginBottom: "15px" }}>
-        <Button height="60px" width="200px" fontSize="25px" m="15px" onClick={handleSearch}>
+      <ButtonGroup
+        variant="outline"
+        spacing="6"
+        style={{ marginBottom: "15px" }}
+      >
+        <Button
+          height="60px"
+          width="200px"
+          fontSize="25px"
+          m="15px"
+          onClick={handleSearch}
+        >
           경로 검색하기
         </Button>
-        <Button height="60px" m="15px" colorScheme="blue" variant="solid" fontSize="25px" onClick={addWaypoint}>
+        <Button
+          height="60px"
+          m="15px"
+          colorScheme="blue"
+          variant="solid"
+          fontSize="25px"
+          onClick={addWaypoint}
+        >
           경유지추가
         </Button>
-        <Button height="60px" m="15px" colorScheme="red" variant="solid" fontSize="25px" onClick={deleteWaypoint}>
+        <Button
+          height="60px"
+          m="15px"
+          colorScheme="red"
+          variant="solid"
+          fontSize="25px"
+          onClick={deleteWaypoint}
+        >
           경유지삭제
         </Button>
       </ButtonGroup>
-      <div style={{ display: "flex", flexDirection: "row", alignItems: "center", marginBottom: "15px" }}>
-        <Input id="startPoint" ml="15px" w="25vw" h="70px" placeholder="출발지" fontSize="30px" />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          marginBottom: "15px",
+        }}
+      >
+        <Input
+          id="startPoint"
+          ml="15px"
+          w="25vw"
+          h="70px"
+          placeholder="출발지"
+          fontSize="30px"
+        />
       </div>
       <Stack m="15px" spacing={3}>
         {list.map((waypoint, index) => (
@@ -246,7 +313,14 @@ export default function Home() {
           />
         ))}
       </Stack>
-      <Input id="endPoint" ml="15px" w="25vw" h="70px" placeholder="도착지" fontSize="30px" />
+      <Input
+        id="endPoint"
+        ml="15px"
+        w="25vw"
+        h="70px"
+        placeholder="도착지"
+        fontSize="30px"
+      />
     </>
   );
 }
