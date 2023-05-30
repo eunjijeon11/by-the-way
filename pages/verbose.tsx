@@ -14,7 +14,7 @@ import {
 import "../styles/verbose.module.css";
 import data from "./dummy.json";
 import Script from "next/script";
-import { useState } from "react";
+import { NextRouter, useRouter } from "next/router";
 
 function verboseBox(leg: any) {
   var icon: "🚍" | "🚊" | "🚆" | "🚶🏻" = "🚶🏻";
@@ -150,14 +150,19 @@ function placeMarker(leg: any) {
 }
 
 export default function Verbose() {
+  var route = localStorage.getItem("selectedRoute");
+  var data = JSON.parse(route);
+
   var scriptList: any[] = [];
   var i = 0;
-  data.routes[0].legs.map((way, _) => {
-    scriptList.push(
-      <Script key={(i++).toString()} id={(i++).toString()}>{`
-		makeMarker(${way.start.lat}, ${way.start.lon});
-	`}</Script>
-    );
+  data.routes.map((route, i) => {
+    route.legs.map((way, _) => {
+      scriptList.push(
+        <Script key={(i++).toString()} id={(i++).toString()}>{`
+					makeMarker(${way.start.lat}, ${way.start.lon});
+				`}</Script>
+      );
+    });
   });
   return (
     <>

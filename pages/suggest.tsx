@@ -5,6 +5,18 @@ import { Button, ButtonGroup } from "@chakra-ui/react";
 import { Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react";
 import { SimpleGrid, Heading, Text } from "@chakra-ui/react";
 
+function sendMethod(method: any, via: number) {
+  var query2: any = {};
+  const route = [];
+  for (var i = 0; i < via + 2; i++) route.push(method[i]);
+  query2.routes = route;
+  query2.walk = method[6];
+  query2.transfer = method[7];
+  query2.cost = method[8];
+  query2.time = method[9];
+  return query2;
+}
+
 export default function Suggestion() {
   const router = useRouter();
 
@@ -510,7 +522,10 @@ export default function Suggestion() {
               variant="ghost"
               colorScheme="black"
               onClick={() => {
-                localStorage.setItem("selectedRoute", method1.toString());
+                localStorage.setItem(
+                  "selectedRoute",
+                  sendMethod(method1, via).toString()
+                );
                 router.push({ pathname: "/verbose" });
               }}
             >
@@ -538,7 +553,10 @@ export default function Suggestion() {
           <CardFooter>
             <ButtonGroup
               onClick={() => {
-                localStorage.setItem("selectedRoute", method2.toString());
+                localStorage.setItem(
+                  "selectedRoute",
+                  sendMethod(method2, via).toString()
+                );
                 router.push({ pathname: "/verbose" });
               }}
             >
@@ -568,7 +586,10 @@ export default function Suggestion() {
           <CardFooter>
             <ButtonGroup
               onClick={() => {
-                localStorage.setItem("selectedRoute", method3.toString());
+                localStorage.setItem(
+                  "selectedRoute",
+                  sendMethod(method3, via).toString()
+                );
                 router.push({ pathname: "/verbose" });
               }}
             >
@@ -598,7 +619,10 @@ export default function Suggestion() {
           <CardFooter>
             <ButtonGroup
               onClick={() => {
-                localStorage.setItem("selectedRoute", method4.toString());
+                localStorage.setItem(
+                  "selectedRoute",
+                  sendMethod(method4, via).toString()
+                );
                 router.push({ pathname: "/verbose" });
               }}
             >
@@ -628,7 +652,10 @@ export default function Suggestion() {
           <CardFooter>
             <ButtonGroup
               onClick={() => {
-                localStorage.setItem("selectedRoute", method5.toString());
+                localStorage.setItem(
+                  "selectedRoute",
+                  sendMethod(method5, via).toString()
+                );
                 router.push({ pathname: "/verbose" });
               }}
             >
