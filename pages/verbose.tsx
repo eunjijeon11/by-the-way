@@ -30,11 +30,19 @@ function verboseBox(leg: any) {
   } else if (leg.mode === "SUBWAY") {
     icon = "🚊";
     color = "orange.300";
-    verbose = "지하철";
+    verbose =
+      leg.route +
+      "으로 " +
+      (leg.passStopList.stationList.length - 1).toString() +
+      "개 역 이동";
   } else if (leg.mode === "TRAIN") {
     icon = "🚆";
     color = "#" + leg.routeColor;
-    verbose = "기차";
+    verbose =
+      leg.route +
+      "으로 " +
+      (leg.passStopList.stationList.length - 1).toString() +
+      "개 역 이동";
   }
 
   return (
