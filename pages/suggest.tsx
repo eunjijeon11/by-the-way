@@ -5,17 +5,21 @@ import { Button, ButtonGroup } from "@chakra-ui/react";
 import { Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react";
 import { SimpleGrid, Heading, Text } from "@chakra-ui/react";
 
-function sendMethod(method: any, length: number) {
-  var query: any = {};
+function sendMethod(query, method: any, length: number) {
+  var query2: any = {};
   const route = [];
-  for (var i = 0; i < length; i++) route.push(method[i]);
-  query.routes = route;
-  query.walk = method[6];
-  query.transfer = method[7];
-  query.cost = method[8];
-  query.time = method[9];
-  console.log(query);
-  return query;
+  for (var i = 0; i < length+1; i++){
+    route.push(method[i]);
+    route[i].legs[0].start.name=query.waypointsData[i].name;
+    route[i].legs[route[i].legs.length-1].end.name=query.waypointsData[i+1].name;
+  }
+  query2.routes = route;
+  query2.walk = method[6];
+  query2.transfer = method[7];
+  query2.cost = method[8];
+  query2.time = method[9];
+  console.log(query2);
+  return query2;
 }
 
 export default function Suggestion() {
@@ -66,7 +70,6 @@ export default function Suggestion() {
   const [isLoading6, setIsloading6] = useState(true);
 
   var via = query.length; //경유지 개수(앞에서 받아오기)
-  via -= 2;
 
   useEffect(() => {
     async function fetchData() {
@@ -288,9 +291,6 @@ export default function Suggestion() {
     return <div> Loading... </div>;
   }
 
-  console.log(data1.metaData.plan.itineraries);
-  console.log(data2.metaData.plan.itineraries);
-
   const dataList = [];
   dataList.push(data2);
   if (via - 1 > 0) {
@@ -463,21 +463,29 @@ export default function Suggestion() {
   var hours = today.getHours();
   var minutes = today.getMinutes();
 
-  var method1_hours = Math.round(method1[9] / 3600);
+  var method1_hours = parseInt(method1[9] / 3600);
   method1[9] -= method1_hours * 3600;
-  var method1_minutes = Math.round(method1[9] / 60);
-  var method2_hours = Math.round(method2[9] / 3600);
+  var method1_minutes = parseInt(method1[9] / 60);
+  var method2_hours = parseInt(method2[9] / 3600);
   method2[9] -= method2_hours * 3600;
-  var method2_minutes = Math.round(method2[9] / 60);
-  var method3_hours = Math.round(method3[9] / 3600);
+  var method2_minutes = parseInt(method2[9] / 60);
+  var method3_hours = parseInt(method3[9] / 3600);
   method3[9] -= method3_hours * 3600;
-  var method3_minutes = Math.round(method3[9] / 60);
-  var method4_hours = Math.round(method4[9] / 3600);
+  var method3_minutes = parseInt(method3[9] / 60);
+  var method4_hours = parseInt(method4[9] / 3600);
   method4[9] -= method4_hours * 3600;
-  var method4_minutes = Math.round(method4[9] / 60);
-  var method5_hours = Math.round(method5[9] / 3600);
+  var method4_minutes = parseInt(method4[9] / 60);
+  var method5_hours = parseInt(method5[9] / 3600);
   method5[9] -= method5_hours * 3600;
-  var method5_minutes = Math.round(method5[9] / 60);
+  var method5_minutes = parseInt(method5[9] / 60);
+
+  function print_time(hour:number,minute:number,mhour:number,mminute:number){
+    if(minute+mminute>59) hour += 1;
+    hour += mhour;
+    if(minute+mminute>59) minute += mminute-60;
+    else minute += mminute;
+    return hour.toString()+":"+String(minute).padStart(2, "0")
+  }
 
   return (
     <>
@@ -496,9 +504,9 @@ export default function Suggestion() {
             </Heading>
             <Text>
               {hours}:{String(minutes).padStart(2, "0")} ~{" "}
-              {hours + method1_hours}:{minutes + method1_minutes}
+              {print_time(hours,minutes,method1_hours,method1_minutes)}
             </Text>
-            <Text>도보: {Math.round(method1[6] / 60)}분 </Text>
+            <Text>도보: {parseInt(method1[6] / 60)}분 </Text>
             <Text>환승: {method1[7]}회</Text>
             <Text>카드: {method1[8]}원</Text>
           </CardBody>
@@ -509,7 +517,7 @@ export default function Suggestion() {
               onClick={() => {
                 localStorage.setItem(
                   "selectedRoute",
-                  JSON.stringify(sendMethod(method1, query.length))
+                  JSON.stringify(sendMethod(query, method1, query.length))
                 );
                 router.push({ pathname: "/verbose" });
               }}
@@ -529,9 +537,9 @@ export default function Suggestion() {
             </Heading>
             <Text>
               {hours}:{String(minutes).padStart(2, "0")} ~{" "}
-              {hours + method2_hours}:{minutes + method2_minutes}
+              {print_time(hours,minutes,method2_hours,method2_minutes)}
             </Text>
-            <Text>도보: {Math.round(method2[6] / 60)}분 </Text>
+            <Text>도보: {parseInt(method2[6] / 60)}분 </Text>
             <Text>환승: {method2[7]}회</Text>
             <Text>카드: {method2[8]}원</Text>
           </CardBody>
@@ -540,7 +548,7 @@ export default function Suggestion() {
               onClick={() => {
                 localStorage.setItem(
                   "selectedRoute",
-                  JSON.stringify(sendMethod(method2, query.length))
+                  JSON.stringify(sendMethod(query, method2, query.length))
                 );
                 router.push({ pathname: "/verbose" });
               }}
@@ -562,9 +570,9 @@ export default function Suggestion() {
             </Heading>
             <Text>
               {hours}:{String(minutes).padStart(2, "0")} ~{" "}
-              {hours + method3_hours}:{minutes + method3_minutes}
+              {print_time(hours,minutes,method3_hours,method3_minutes)}
             </Text>
-            <Text>도보: {Math.round(method3[6] / 60)}분 </Text>
+            <Text>도보: {parseInt(method3[6] / 60)}분 </Text>
             <Text>환승: {method3[7]}회</Text>
             <Text>카드: {method3[8]}원</Text>
           </CardBody>
@@ -573,7 +581,7 @@ export default function Suggestion() {
               onClick={() => {
                 localStorage.setItem(
                   "selectedRoute",
-                  JSON.stringify(sendMethod(method3, query.length))
+                  JSON.stringify(sendMethod(query, method3, query.length))
                 );
                 router.push({ pathname: "/verbose" });
               }}
@@ -595,9 +603,9 @@ export default function Suggestion() {
             </Heading>
             <Text>
               {hours}:{String(minutes).padStart(2, "0")} ~{" "}
-              {hours + method4_hours}:{minutes + method4_minutes}
+              {print_time(hours,minutes,method4_hours,method4_minutes)}
             </Text>
-            <Text>도보: {Math.round(method4[6] / 60)}분 </Text>
+            <Text>도보: {parseInt(method4[6] / 60)}분 </Text>
             <Text>환승: {method4[7]}회</Text>
             <Text>카드: {method4[8]}원</Text>
           </CardBody>
@@ -606,7 +614,7 @@ export default function Suggestion() {
               onClick={() => {
                 localStorage.setItem(
                   "selectedRoute",
-                  JSON.stringify(sendMethod(method4, query.length))
+                  JSON.stringify(sendMethod(query, method4, query.length))
                 );
                 router.push({ pathname: "/verbose" });
               }}
@@ -628,9 +636,9 @@ export default function Suggestion() {
             </Heading>
             <Text>
               {hours}:{String(minutes).padStart(2, "0")} ~{" "}
-              {hours + method5_hours}:{minutes + method5_minutes}
+              {print_time(hours,minutes,method5_hours,method5_minutes)}
             </Text>
-            <Text>도보: {Math.round(method5[6] / 60)}분 </Text>
+            <Text>도보: {parseInt(method5[6] / 60)}분 </Text>
             <Text>환승: {method5[7]}회</Text>
             <Text>카드: {method5[8]}원</Text>
           </CardBody>
@@ -639,7 +647,7 @@ export default function Suggestion() {
               onClick={() => {
                 localStorage.setItem(
                   "selectedRoute",
-                  JSON.stringify(sendMethod(method5, query.length))
+                  JSON.stringify(sendMethod(query, method5, query.length))
                 );
                 router.push({ pathname: "/verbose" });
               }}
