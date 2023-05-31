@@ -1,17 +1,18 @@
 import "../styles/suggest.module.css";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { Button, ButtonGroup } from "@chakra-ui/react";
+import { Button, ButtonGroup, Center } from "@chakra-ui/react";
 import { Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react";
 import { SimpleGrid, Heading, Text } from "@chakra-ui/react";
 
 function sendMethod(query, method: any, length: number) {
   var query2: any = {};
   const route = [];
-  for (var i = 0; i < length+1; i++){
+  for (var i = 0; i < length + 1; i++) {
     route.push(method[i]);
-    route[i].legs[0].start.name=query.waypointsData[i].name;
-    route[i].legs[route[i].legs.length-1].end.name=query.waypointsData[i+1].name;
+    route[i].legs[0].start.name = query.waypointsData[i].name;
+    route[i].legs[route[i].legs.length - 1].end.name =
+      query.waypointsData[i + 1].name;
   }
   query2.routes = route;
   query2.walk = method[6];
@@ -479,21 +480,23 @@ export default function Suggestion() {
   method5[9] -= method5_hours * 3600;
   var method5_minutes = parseInt(method5[9] / 60);
 
-  function print_time(hour:number,minute:number,mhour:number,mminute:number){
-    if(minute+mminute>59) hour += 1;
+  function print_time(
+    hour: number,
+    minute: number,
+    mhour: number,
+    mminute: number
+  ) {
+    if (minute + mminute > 59) hour += 1;
     hour += mhour;
-    if(minute+mminute>59) minute += mminute-60;
+    if (minute + mminute > 59) minute += mminute - 60;
     else minute += mminute;
-    return hour.toString()+":"+String(minute).padStart(2, "0")
+    return hour.toString() + ":" + String(minute).padStart(2, "0");
   }
 
   return (
-    <>
-      <SimpleGrid
-        spacing={4}
-        templateColumns="repeat(auto-fill, minmax(200px, 1fr))"
-      >
-        <Card>
+    <Center w="100vw" h="100vh" p="20">
+      <SimpleGrid w="100vw" alignContent="center" spacing={4} columns={5}>
+        <Card shadow="lg">
           <CardHeader>
             <Heading size="md"> 최소시간 경로1</Heading>
           </CardHeader>
@@ -504,7 +507,7 @@ export default function Suggestion() {
             </Heading>
             <Text>
               {hours}:{String(minutes).padStart(2, "0")} ~{" "}
-              {print_time(hours,minutes,method1_hours,method1_minutes)}
+              {print_time(hours, minutes, method1_hours, method1_minutes)}
             </Text>
             <Text>도보: {parseInt(method1[6] / 60)}분 </Text>
             <Text>환승: {method1[7]}회</Text>
@@ -526,7 +529,7 @@ export default function Suggestion() {
             </Button>
           </CardFooter>
         </Card>
-        <Card>
+        <Card shadow="lg">
           <CardHeader>
             <Heading size="md"> 최소시간 경로2</Heading>
           </CardHeader>
@@ -537,7 +540,7 @@ export default function Suggestion() {
             </Heading>
             <Text>
               {hours}:{String(minutes).padStart(2, "0")} ~{" "}
-              {print_time(hours,minutes,method2_hours,method2_minutes)}
+              {print_time(hours, minutes, method2_hours, method2_minutes)}
             </Text>
             <Text>도보: {parseInt(method2[6] / 60)}분 </Text>
             <Text>환승: {method2[7]}회</Text>
@@ -559,7 +562,7 @@ export default function Suggestion() {
             </ButtonGroup>
           </CardFooter>
         </Card>
-        <Card>
+        <Card shadow="lg">
           <CardHeader>
             <Heading size="md"> 최소시간 경로3</Heading>
           </CardHeader>
@@ -570,7 +573,7 @@ export default function Suggestion() {
             </Heading>
             <Text>
               {hours}:{String(minutes).padStart(2, "0")} ~{" "}
-              {print_time(hours,minutes,method3_hours,method3_minutes)}
+              {print_time(hours, minutes, method3_hours, method3_minutes)}
             </Text>
             <Text>도보: {parseInt(method3[6] / 60)}분 </Text>
             <Text>환승: {method3[7]}회</Text>
@@ -592,7 +595,7 @@ export default function Suggestion() {
             </ButtonGroup>
           </CardFooter>
         </Card>
-        <Card>
+        <Card shadow="lg">
           <CardHeader>
             <Heading size="md"> 최소환승 경로</Heading>
           </CardHeader>
@@ -603,7 +606,7 @@ export default function Suggestion() {
             </Heading>
             <Text>
               {hours}:{String(minutes).padStart(2, "0")} ~{" "}
-              {print_time(hours,minutes,method4_hours,method4_minutes)}
+              {print_time(hours, minutes, method4_hours, method4_minutes)}
             </Text>
             <Text>도보: {parseInt(method4[6] / 60)}분 </Text>
             <Text>환승: {method4[7]}회</Text>
@@ -625,7 +628,7 @@ export default function Suggestion() {
             </ButtonGroup>
           </CardFooter>
         </Card>
-        <Card>
+        <Card shadow="lg">
           <CardHeader>
             <Heading size="md"> 최소요금 경로</Heading>
           </CardHeader>
@@ -636,7 +639,7 @@ export default function Suggestion() {
             </Heading>
             <Text>
               {hours}:{String(minutes).padStart(2, "0")} ~{" "}
-              {print_time(hours,minutes,method5_hours,method5_minutes)}
+              {print_time(hours, minutes, method5_hours, method5_minutes)}
             </Text>
             <Text>도보: {parseInt(method5[6] / 60)}분 </Text>
             <Text>환승: {method5[7]}회</Text>
@@ -660,6 +663,6 @@ export default function Suggestion() {
           </CardFooter>
         </Card>
       </SimpleGrid>
-    </>
+    </Center>
   );
 }

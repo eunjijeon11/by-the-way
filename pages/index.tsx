@@ -1,7 +1,19 @@
 import { useState } from "react";
 import { NextRouter, useRouter } from "next/router";
-import { Input, Stack, Button, ButtonGroup } from "@chakra-ui/react";
+import {
+  Input,
+  Stack,
+  Button,
+  ButtonGroup,
+  Center,
+  Box,
+  Flex,
+  Spacer,
+  Text,
+} from "@chakra-ui/react";
 import axios from "axios";
+import { AiFillGithub } from "react-icons/ai";
+import { TbMapSearch, TbPlus, TbTrashX, TbSearch } from "react-icons/tb";
 
 interface Waypoint {
   name: string;
@@ -246,80 +258,100 @@ export default function Home() {
   };
 
   return (
-    <>
-      <ButtonGroup
-        variant="outline"
-        spacing="6"
-        style={{ marginBottom: "15px" }}
+    <Flex flexDirection="column" h="100vh">
+      <Flex
+        w="100vw"
+        h="60px"
+        bg="gray.50"
+        shadow="md"
+        alignItems="center"
+        px="70px"
       >
+        <TbMapSearch size="28px" />
+        <Text color="gray.700" mx="3">
+          By The Way
+        </Text>
+        <Spacer />
         <Button
-          height="60px"
-          width="200px"
-          fontSize="25px"
-          m="15px"
-          onClick={handleSearch}
+          leftIcon={<AiFillGithub size="20px" />}
+          onClick={() => {
+            window.open("https://github.com/comedu-cute-members/by-the-way");
+          }}
         >
-          경로 검색하기
+          GitHub
         </Button>
-        <Button
-          height="60px"
-          m="15px"
-          colorScheme="blue"
-          variant="solid"
-          fontSize="25px"
-          onClick={addWaypoint}
-        >
-          경유지추가
-        </Button>
-        <Button
-          height="60px"
-          m="15px"
-          colorScheme="red"
-          variant="solid"
-          fontSize="25px"
-          onClick={deleteWaypoint}
-        >
-          경유지삭제
-        </Button>
-      </ButtonGroup>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          marginBottom: "15px",
-        }}
-      >
-        <Input
-          id="startPoint"
-          ml="15px"
-          w="25vw"
-          h="70px"
-          placeholder="출발지"
-          fontSize="30px"
-        />
-      </div>
-      <Stack m="15px" spacing={3}>
-        {list.map((waypoint, index) => (
+      </Flex>
+      <Center w="100vw" flex="1" paddingBottom="5">
+        <Stack alignItems="center">
+          <ButtonGroup
+            variant="outline"
+            spacing="6"
+            style={{ marginBottom: "15px" }}
+          >
+            <Button
+              height="60px"
+              m="15px"
+              colorScheme="blue"
+              variant="solid"
+              fontSize="25px"
+              leftIcon={<TbPlus />}
+              onClick={addWaypoint}
+            >
+              경유지추가
+            </Button>
+            <Button
+              height="60px"
+              m="15px"
+              colorScheme="red"
+              variant="solid"
+              fontSize="25px"
+              leftIcon={<TbTrashX />}
+              onClick={deleteWaypoint}
+            >
+              경유지삭제
+            </Button>
+          </ButtonGroup>
           <Input
-            key={`waypoint${index}`}
-            className="waypoint"
-            id={`waypoint${index}`}
+            id="startPoint"
+            ml="15px"
             w="25vw"
             h="70px"
+            placeholder="출발지"
             fontSize="30px"
-            placeholder={`경유지${index + 1}`}
           />
-        ))}
-      </Stack>
-      <Input
-        id="endPoint"
-        ml="15px"
-        w="25vw"
-        h="70px"
-        placeholder="도착지"
-        fontSize="30px"
-      />
-    </>
+          <Stack m="15px" spacing={3}>
+            {list.map((waypoint, index) => (
+              <Input
+                key={`waypoint${index}`}
+                className="waypoint"
+                id={`waypoint${index}`}
+                w="25vw"
+                h="70px"
+                fontSize="30px"
+                placeholder={`경유지${index + 1}`}
+              />
+            ))}
+          </Stack>
+          <Input
+            id="endPoint"
+            ml="15px"
+            w="25vw"
+            h="70px"
+            placeholder="도착지"
+            fontSize="30px"
+          />
+          <Button
+            height="60px"
+            width="250px"
+            fontSize="25px"
+            m="15px"
+            leftIcon={<TbSearch />}
+            onClick={handleSearch}
+          >
+            경로 검색하기
+          </Button>
+        </Stack>
+      </Center>
+    </Flex>
   );
 }
