@@ -5,40 +5,25 @@ import { Button, ButtonGroup } from "@chakra-ui/react";
 import { Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react";
 import { SimpleGrid, Heading, Text } from "@chakra-ui/react";
 
-function sendMethod(method: any, via: number) {
-  var query2: any = {};
+function sendMethod(method: any, length: number) {
+  var query: any = {};
   const route = [];
-  for (var i = 0; i < via + 2; i++) route.push(method[i]);
-  query2.routes = route;
-  query2.walk = method[6];
-  query2.transfer = method[7];
-  query2.cost = method[8];
-  query2.time = method[9];
-  return query2;
+  for (var i = 0; i < length; i++) route.push(method[i]);
+  query.routes = route;
+  query.walk = method[6];
+  query.transfer = method[7];
+  query.cost = method[8];
+  query.time = method[9];
+  console.log(query);
+  return query;
 }
 
 export default function Suggestion() {
   const router = useRouter();
 
   const query = {
-    length: 3,
-    waypointsData: [
-      {
-        name: "홍대입구역[2호선]",
-        lat: "37.55709320",
-        lon: "126.92385960",
-      },
-      {
-        name: "혜화역[4호선]",
-        lat: "37.58236944",
-        lon: "127.00185178",
-      },
-      {
-        name: "서울역",
-        lat: "37.55470543",
-        lon: "126.97068873",
-      },
-    ],
+    length: 0,
+    waypointsData: [],
   };
 
   query.length = parseFloat(localStorage.getItem("length"));
@@ -524,7 +509,7 @@ export default function Suggestion() {
               onClick={() => {
                 localStorage.setItem(
                   "selectedRoute",
-                  sendMethod(method1, via).toString()
+                  JSON.stringify(sendMethod(method1, query.length))
                 );
                 router.push({ pathname: "/verbose" });
               }}
@@ -555,7 +540,7 @@ export default function Suggestion() {
               onClick={() => {
                 localStorage.setItem(
                   "selectedRoute",
-                  sendMethod(method2, via).toString()
+                  JSON.stringify(sendMethod(method2, query.length))
                 );
                 router.push({ pathname: "/verbose" });
               }}
@@ -588,7 +573,7 @@ export default function Suggestion() {
               onClick={() => {
                 localStorage.setItem(
                   "selectedRoute",
-                  sendMethod(method3, via).toString()
+                  JSON.stringify(sendMethod(method3, query.length))
                 );
                 router.push({ pathname: "/verbose" });
               }}
@@ -621,7 +606,7 @@ export default function Suggestion() {
               onClick={() => {
                 localStorage.setItem(
                   "selectedRoute",
-                  sendMethod(method4, via).toString()
+                  JSON.stringify(sendMethod(method4, query.length))
                 );
                 router.push({ pathname: "/verbose" });
               }}
@@ -654,7 +639,7 @@ export default function Suggestion() {
               onClick={() => {
                 localStorage.setItem(
                   "selectedRoute",
-                  sendMethod(method5, via).toString()
+                  JSON.stringify(sendMethod(method5, query.length))
                 );
                 router.push({ pathname: "/verbose" });
               }}
@@ -663,6 +648,7 @@ export default function Suggestion() {
                 경로 상세보기
               </Button>
             </ButtonGroup>
+            a
           </CardFooter>
         </Card>
       </SimpleGrid>

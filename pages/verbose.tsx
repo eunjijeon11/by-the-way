@@ -12,9 +12,8 @@ import {
   List,
 } from "@chakra-ui/react";
 import "../styles/verbose.module.css";
-import data from "./dummy.json";
+// import data from "./dummy.json";
 import Script from "next/script";
-import { NextRouter, useRouter } from "next/router";
 
 function verboseBox(leg: any) {
   var icon: "🚍" | "🚊" | "🚆" | "🚶🏻" = "🚶🏻";
@@ -94,7 +93,7 @@ function Progressbar(
   );
 }
 
-function mainInfo() {
+function mainInfo(data: any) {
   return (
     <>
       <Stack
@@ -150,8 +149,10 @@ function placeMarker(leg: any) {
 }
 
 export default function Verbose() {
-  var route = localStorage.getItem("selectedRoute");
-  var data = JSON.parse(route);
+  var routes = localStorage.getItem("selectedRoute");
+
+  var data = JSON.parse(routes);
+  console.log(data);
 
   var scriptList: any[] = [];
   var i = 0;
@@ -177,7 +178,7 @@ export default function Verbose() {
             </Text>
           </HStack>
 
-          {mainInfo()}
+          {mainInfo(data)}
         </Flex>
         <Script id="mapinit">
           {`
