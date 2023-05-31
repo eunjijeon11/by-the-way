@@ -272,6 +272,9 @@ export default function Home() {
           By The Way
         </Text>
         <Spacer />
+        <Text fontSize="xs" color="gray.700" mx="5">
+          자료구조 텀프로젝트 <br /> made by 권력남용
+        </Text>
         <Button
           leftIcon={<AiFillGithub size="20px" />}
           onClick={() => {
