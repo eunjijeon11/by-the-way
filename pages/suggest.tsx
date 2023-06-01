@@ -5,7 +5,7 @@ import { Button, ButtonGroup, Center } from "@chakra-ui/react";
 import { Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react";
 import { SimpleGrid, Heading, Text } from "@chakra-ui/react";
 
-function sendMethod(query, method: any, length: number) {
+function sendMethod(query: any, method: any, length: number) {
   var query2: any = {};
   const route = [];
   for (var i = 0; i < length + 1; i++) {
@@ -28,11 +28,16 @@ export default function Suggestion() {
 
   const query = {
     length: 0,
-    waypointsData: [],
+    waypointsData: [
+      { lon: 0, lat: 0 },
+      { lon: 0, lat: 0 },
+    ],
   };
 
-  query.length = parseFloat(localStorage.getItem("length"));
-  query.waypointsData = JSON.parse(localStorage.getItem("Data"));
+  if (typeof window !== "undefined") {
+    query.length = parseFloat(localStorage!.getItem("length")!);
+    query.waypointsData = JSON.parse(localStorage!.getItem("Data")!);
+  }
 
   const options = {
     method: "POST",
@@ -52,22 +57,40 @@ export default function Suggestion() {
     }),
   };
 
-  const [data1, setData1] = useState(null);
+  var data = {
+    metaData: {
+      plan: {
+        itineraries: [
+          {
+            totalWalkTime: 0,
+            transferCount: 0,
+            fare: {
+              regular: {
+                totalFare: 0,
+              },
+            },
+            totalTime: 0,
+          },
+        ],
+      },
+    },
+  };
+  const [data1, setData1] = useState(data);
   const [isLoading1, setIsloading1] = useState(true);
 
-  const [data2, setData2] = useState(null);
+  const [data2, setData2] = useState(data);
   const [isLoading2, setIsloading2] = useState(true);
 
-  const [data3, setData3] = useState(null);
+  const [data3, setData3] = useState(data);
   const [isLoading3, setIsloading3] = useState(true);
 
-  const [data4, setData4] = useState(null);
+  const [data4, setData4] = useState(data);
   const [isLoading4, setIsloading4] = useState(true);
 
-  const [data5, setData5] = useState(null);
+  const [data5, setData5] = useState(data);
   const [isLoading5, setIsloading5] = useState(true);
 
-  const [data6, setData6] = useState(null);
+  const [data6, setData6] = useState(data);
   const [isLoading6, setIsloading6] = useState(true);
 
   var via = query.length; //경유지 개수(앞에서 받아오기)
@@ -307,7 +330,7 @@ export default function Suggestion() {
     dataList.push(data6);
   }
 
-  const itinerary = data1.metaData.plan.itineraries;
+  const itinerary = data1!.metaData.plan.itineraries;
   const method1 = new Array(10); //time1
   const method2 = new Array(10); //time2
   const method3 = new Array(10); //time3
@@ -464,21 +487,21 @@ export default function Suggestion() {
   var hours = today.getHours();
   var minutes = today.getMinutes();
 
-  var method1_hours = parseInt(method1[9] / 3600);
+  var method1_hours = Math.floor(method1[9] / 3600);
   method1[9] -= method1_hours * 3600;
-  var method1_minutes = parseInt(method1[9] / 60);
-  var method2_hours = parseInt(method2[9] / 3600);
+  var method1_minutes = Math.floor(method1[9] / 60);
+  var method2_hours = Math.floor(method2[9] / 3600);
   method2[9] -= method2_hours * 3600;
-  var method2_minutes = parseInt(method2[9] / 60);
-  var method3_hours = parseInt(method3[9] / 3600);
+  var method2_minutes = Math.floor(method2[9] / 60);
+  var method3_hours = Math.floor(method3[9] / 3600);
   method3[9] -= method3_hours * 3600;
-  var method3_minutes = parseInt(method3[9] / 60);
-  var method4_hours = parseInt(method4[9] / 3600);
+  var method3_minutes = Math.floor(method3[9] / 60);
+  var method4_hours = Math.floor(method4[9] / 3600);
   method4[9] -= method4_hours * 3600;
-  var method4_minutes = parseInt(method4[9] / 60);
-  var method5_hours = parseInt(method5[9] / 3600);
+  var method4_minutes = Math.floor(method4[9] / 60);
+  var method5_hours = Math.floor(method5[9] / 3600);
   method5[9] -= method5_hours * 3600;
-  var method5_minutes = parseInt(method5[9] / 60);
+  var method5_minutes = Math.floor(method5[9] / 60);
 
   function print_time(
     hour: number,
@@ -509,7 +532,7 @@ export default function Suggestion() {
               {hours}:{String(minutes).padStart(2, "0")} ~{" "}
               {print_time(hours, minutes, method1_hours, method1_minutes)}
             </Text>
-            <Text>도보: {parseInt(method1[6] / 60)}분 </Text>
+            <Text>도보: {Math.floor(method1[6] / 60)}분 </Text>
             <Text>환승: {method1[7]}회</Text>
             <Text>카드: {method1[8]}원</Text>
           </CardBody>
@@ -542,7 +565,7 @@ export default function Suggestion() {
               {hours}:{String(minutes).padStart(2, "0")} ~{" "}
               {print_time(hours, minutes, method2_hours, method2_minutes)}
             </Text>
-            <Text>도보: {parseInt(method2[6] / 60)}분 </Text>
+            <Text>도보: {Math.floor(method2[6] / 60)}분 </Text>
             <Text>환승: {method2[7]}회</Text>
             <Text>카드: {method2[8]}원</Text>
           </CardBody>
@@ -575,7 +598,7 @@ export default function Suggestion() {
               {hours}:{String(minutes).padStart(2, "0")} ~{" "}
               {print_time(hours, minutes, method3_hours, method3_minutes)}
             </Text>
-            <Text>도보: {parseInt(method3[6] / 60)}분 </Text>
+            <Text>도보: {Math.floor(method3[6] / 60)}분 </Text>
             <Text>환승: {method3[7]}회</Text>
             <Text>카드: {method3[8]}원</Text>
           </CardBody>
@@ -608,7 +631,7 @@ export default function Suggestion() {
               {hours}:{String(minutes).padStart(2, "0")} ~{" "}
               {print_time(hours, minutes, method4_hours, method4_minutes)}
             </Text>
-            <Text>도보: {parseInt(method4[6] / 60)}분 </Text>
+            <Text>도보: {Math.floor(method4[6] / 60)}분 </Text>
             <Text>환승: {method4[7]}회</Text>
             <Text>카드: {method4[8]}원</Text>
           </CardBody>
@@ -641,7 +664,7 @@ export default function Suggestion() {
               {hours}:{String(minutes).padStart(2, "0")} ~{" "}
               {print_time(hours, minutes, method5_hours, method5_minutes)}
             </Text>
-            <Text>도보: {parseInt(method5[6] / 60)}분 </Text>
+            <Text>도보: {Math.floor(method5[6] / 60)}분 </Text>
             <Text>환승: {method5[7]}회</Text>
             <Text>카드: {method5[8]}원</Text>
           </CardBody>

@@ -12,7 +12,7 @@ import {
   List,
 } from "@chakra-ui/react";
 import "../styles/verbose.module.css";
-// import data from "./dummy.json";
+import dummydata from "./dummy.json";
 import Script from "next/script";
 
 function verboseBox(leg: any) {
@@ -114,7 +114,7 @@ function mainInfo(data: any) {
           },
         }}
       >
-        {data.routes.map((way, i) => (
+        {data.routes.map((way: any, i: number) => (
           <Box key={i} flexDirection="column">
             {Progressbar(way.legs)}
             <Card
@@ -156,16 +156,26 @@ function placeMarker(leg: any) {
   );
 }
 
-export default function Verbose() {
-  var routes = localStorage.getItem("selectedRoute");
+function parseJSON(input: any) {
+  try {
+    return JSON.parse(input);
+  } catch {
+    return dummydata;
+  }
+}
 
-  var data = JSON.parse(routes);
+export default function Verbose() {
+  var routes: string | null = "";
+  if (typeof window !== "undefined")
+    routes = localStorage.getItem("selectedRoute");
+
+  var data = parseJSON(routes);
   console.log(data);
 
   var scriptList: any[] = [];
   var i = 0;
-  data.routes.map((route, i) => {
-    route.legs.map((way, _) => {
+  data.routes.map((route: any, i: number) => {
+    route.legs.map((way: any, _: number) => {
       scriptList.push(
         <Script key={(i++).toString()} id={(i++).toString()}>{`
 					makeMarker(${way.start.lat}, ${way.start.lon});
